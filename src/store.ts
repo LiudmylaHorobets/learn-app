@@ -2,7 +2,7 @@ import { UnknownAction, applyMiddleware, createStore } from "redux";
 
 import { ThunkAction, thunk } from "redux-thunk";
 import { composeWithDevTools } from "@redux-devtools/extension"; // todo: DEV only
-import rootReducer from "./reducers";
+import rootReducer from "./reduser";
 
 function configureStore() {
   const composedEnhancer = composeWithDevTools(applyMiddleware(thunk));

@@ -1,19 +1,14 @@
-import { Movie, fetchMovies } from "../../reducers/movies";
-import { connect } from "react-redux";
-import { RootState } from "../../store";
 import MovieCard from "./MovieCard";
 
 import { useEffect } from "react";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Container, Grid, LinearProgress, Typography } from "@mui/material";
+import { fetchMovies } from "./moviesSlice";
 
-interface MoviesProps {
-  movies: Movie[];
-  loading: boolean;
-}
-
-export function MoviesPage({ movies, loading }: MoviesProps) {
+function MoviesPage() {
   const dispatch = useAppDispatch();
+  const movies = useAppSelector((state) => state.movies.top);
+  const loading = useAppSelector((state) => state.movies.loading);
 
   useEffect(() => {
     dispatch(fetchMovies());
@@ -46,11 +41,4 @@ export function MoviesPage({ movies, loading }: MoviesProps) {
   );
 }
 
-const mapStateToProps = (state: RootState) => ({
-  movies: state.movies.top,
-  loading: state.movies.loading,
-});
-
-const connector = connect(mapStateToProps);
-
-export default connector(MoviesPage);
+export default MoviesPage;
