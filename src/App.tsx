@@ -1,19 +1,23 @@
-import { useState } from "react";
-import "./App.css";
+import { Route, Routes } from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0);
+import Layout from "./features/Layout/Layout";
+// PAGES
+import HomePage from "./features/Home/HomePage";
+import AboutPage from "./features/About/AboutPage";
+import MoviesPage from "./features/Movies/MoviesPage";
+import NotFoundPage from "./features/NotFoundPage";
 
+export const App = () => {
   return (
     <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="movies" element={<MoviesPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
     </>
   );
-}
-
-export default App;
+};
