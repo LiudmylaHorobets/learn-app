@@ -1,27 +1,68 @@
-import { Action, Reducer } from "redux";
+import { client } from "../api/tmdb";
+import { ActionWithPayload, createReducer } from "../redux/utils";
+import { AppThunk } from "../store";
 
 export interface Movie {
   id: number;
   title: string;
   popularity: number;
   overview: string;
+  image?: string;
 }
 
 interface MovieState {
   top: Movie[];
+  loading: boolean;
 }
 
 const initialState: MovieState = {
-  top: [
-    { id: 1, title: "First movies", popularity: 98, overview: "Dreams..." },
-    { id: 2, title: "Second movies", popularity: 97, overview: "Dreams..." },
-    { id: 3, title: "Third movies", popularity: 96, overview: "Dreams..." },
-    { id: 4, title: "Fourth movies", popularity: 95, overview: "Dreams..." },
-  ],
+  top: [],
+  loading: false,
 };
 
-const moviesReducers: Reducer<MovieState, Action> = (state, action) => {
-  return initialState;
-};
+const moviesLoaded = (movies: Movie[]) => ({
+  type: "movies/loaded",
+  payload: movies,
+});
 
-export default moviesReducers;
+const moviesLoading = () => ({
+  type: "movies/loading",
+});
+
+export function fetchMovies(): AppThunk<Promise<void>> {
+  return async (dispatch, getState) => {
+    dispatch(moviesLoading());
+
+    const config = await client.getConfiguration();
+    const imageUrl = config.images.base_url;
+    const results = await client.getNowPlaying();
+
+    const mappedResults: Movie[] = results.map((m) => ({
+      id: m.id,
+      title: m.title,
+      popularity: m.popularity,
+      overview: m.overview,
+      image: m.backdrop_path ? `${imageUrl}w780${m.backdrop_path}` : undefined,
+    }));
+
+    dispatch(moviesLoaded(mappedResults));
+  };
+}
+
+const moviesReducer = createReducer<MovieState>(initialState, {
+  "movies/loaded": (state, action: ActionWithPayload<Movie[]>) => {
+    return {
+      ...state,
+      top: action.payload,
+      loading: false,
+    };
+  },
+  "movies/loading": (state, action) => {
+    return {
+      ...state,
+      loading: true,
+    };
+  },
+});
+
+export default moviesReducer;
