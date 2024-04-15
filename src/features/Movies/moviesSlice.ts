@@ -30,7 +30,7 @@ const moviesLoading = () => ({
 });
 
 export function fetchMovies(): AppThunk<Promise<void>> {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     dispatch(moviesLoading());
 
     const config = await client.getConfiguration();
@@ -49,7 +49,7 @@ export function fetchMovies(): AppThunk<Promise<void>> {
   };
 }
 const moviesReducer = createReducer<MovieState>(initialState, {
-  "movies/loading": (state, action: ActionWithPayload<boolean>) => {
+  "movies/loading": (state) => {
     return { ...state, loading: true };
   },
   "movies/loaded": (state, action: ActionWithPayload<Movie[]>) => {
@@ -58,20 +58,3 @@ const moviesReducer = createReducer<MovieState>(initialState, {
 });
 
 export default moviesReducer;
-// const moviesReducer = createReducer<MovieState>(initialState, {
-//   "movies/loaded": (state, action: ActionWithPayload<Movie[]>) => {
-//     return {
-//       ...state,
-//       top: action.payload,
-//       loading: false,
-//     };
-//   },
-//   "movies/loading": (state, action) => {
-//     return {
-//       ...state,
-//       loading: true,
-//     };
-//   },
-// });
-
-// export default moviesReducer;
