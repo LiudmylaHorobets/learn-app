@@ -1,14 +1,18 @@
 import MovieCard from "./MovieCard";
 
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Container, Grid, LinearProgress, Typography } from "@mui/material";
 import { fetchMovies } from "./moviesSlice";
+import { AuthContext, anonymousUser } from "../../AuthContext";
 
 function MoviesPage() {
   const dispatch = useAppDispatch();
   const movies = useAppSelector((state) => state.movies.top);
   const loading = useAppSelector((state) => state.movies.loading);
+
+  const { user } = useContext(AuthContext);
+  const loggedIn = user !== anonymousUser;
 
   useEffect(() => {
     dispatch(fetchMovies());
@@ -32,6 +36,7 @@ function MoviesPage() {
                 overview={m.overview}
                 popularity={m.popularity}
                 image={m.image}
+                enableUserActions={loggedIn}
               />
             </Grid>
           ))}
