@@ -11,12 +11,15 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { App } from "./App.tsx";
 import "./index.scss";
+// import { ErrorBoundary } from "./ErrorBoundary.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter basename="template">
       <Provider store={store}>
+        {/* <ErrorBoundary> */}
         <App />
+        {/* </ErrorBoundary> */}
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

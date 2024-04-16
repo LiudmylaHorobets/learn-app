@@ -14,6 +14,7 @@ function Copyright() {
 export default function HomePage() {
   const { user } = useContext(AuthContext);
   const loggedIn = user !== anonymousUser;
+
   const greeting = loggedIn ? `${user.name}, explore movies today with us` : "Explore movies today with us";
 
   return (
